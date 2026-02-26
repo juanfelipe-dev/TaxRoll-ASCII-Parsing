@@ -73,8 +73,13 @@ python fixed_width_to_csv.py test_input.txt test_output.csv --schema test_schema
 
 ### Run the Web UI (optional)
 ```bash
-pip install -r requirements.txt   # install Flask
-python app.py                     # starts server on http://localhost:5000
+pip install -r requirements.txt   # installs Flask (and gunicorn if included)
+# start using built-in server (for development):
+python app.py                     # listens on http://localhost:5000 by default
+
+# for production use a WSGI server; example with gunicorn:
+# export PORT=5000  # Render/Heroku set this automatically
+gunicorn app:app --bind 0.0.0.0:${PORT:-5000}
 ```
 
 Consult the other documentation files for more detailed instructions and

@@ -69,9 +69,10 @@ Complete Python toolkit and web application for converting fixed-width ASCII tax
 ```bash
 # Start the web server
 cd "f:\Copilot Projects\ASCII Python"
-python app.py
+python app.py  # respects $PORT variable if set
 
 # Open in browser
+# usually http://localhost:5000 (or the port defined by your environment)
 http://localhost:5000
 ```
 
@@ -386,7 +387,7 @@ save_to_csv(high_value, 'high_value_properties.csv')
 - [ ] Clone/copy project files
 - [ ] Install requirements: `pip install -r requirements.txt`
 - [ ] Test CLI: `python fixed_width_to_csv.py --help`
-- [ ] Test Web: `python app.py && open http://localhost:5000`
+- [ ] Test Web: `python app.py && open http://localhost:5000` (or replace 5000 with `$PORT`)
 - [ ] Create/obtain schema JSON
 - [ ] Test conversion with sample data
 - [ ] Verify output CSV accuracy
