@@ -1,0 +1,114 @@
+[
+  {
+    "name": "Parcel_Number",
+    "start": 0,
+    "length": 18,
+    "type": "str",
+    "trim": true,
+    "description": "Unique parcel identifier"
+  },
+  {
+    "name": "Owner_Name",
+    "start": 18,
+    "length": 40,
+    "type": "str",
+    "trim": true,
+    "description": "Property owner name"
+  },
+  {
+    "name": "Owner_Address",
+    "start": 58,
+    "length": 50,
+    "type": "str",
+    "trim": true,
+    "description": "Owner's mailing address"
+  },
+  {
+    "name": "Property_Address",
+    "start": 108,
+    "length": 50,
+    "type": "str",
+    "trim": true,
+    "description": "Property street address"
+  },
+  {
+    "name": "City",
+    "start": 158,
+    "length": 20,
+    "type": "str",
+    "trim": true,
+    "description": "City name"
+  },
+  {
+    "name": "State",
+    "start": 178,
+    "length": 2,
+    "type": "str",
+    "trim": true,
+    "description": "State abbreviation"
+  },
+  {
+    "name": "Zip_Code",
+    "start": 180,
+    "length": 10,
+    "type": "str",
+    "trim": true,
+    "description": "Zip or postal code"
+  },
+  {
+    "name": "Land_Use_Code",
+    "start": 190,
+    "length": 3,
+    "type": "str",
+    "trim": true,
+    "description": "Land use classification code"
+  },
+  {
+    "name": "Land_Use_Description",
+    "start": 193,
+    "length": 30,
+    "type": "str",
+    "trim": true,
+    "description": "Description of land use"
+  },
+  {
+    "name": "Total_Assessed_Value",
+    "start": 223,
+    "length": 12,
+    "type": "int",
+    "trim": true,
+    "description": "Total assessed property value"
+  },
+  {
+    "name": "Tax_Amount",
+    "start": 235,
+    "length": 12,
+    "type": "float",
+    "trim": true,
+    "description": "Annual tax amount"
+  },
+  {
+    "name": "Tax_Year",
+    "start": 247,
+    "length": 4,
+    "type": "int",
+    "trim": true,
+    "description": "Tax assessment year"
+  },
+  {
+    "name": "Delinquent_Flag",
+    "start": 251,
+    "length": 1,
+    "type": "str",
+    "trim": true,
+    "description": "Y/N flag for delinquent status"
+  },
+  {
+    "name": "Delinquent_Amount",
+    "start": 252,
+    "length": 12,
+    "type": "float",
+    "trim": true,
+    "description": "Amount of delinquent taxes if applicable"
+  }
+]

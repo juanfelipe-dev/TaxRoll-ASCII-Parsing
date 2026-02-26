@@ -1,0 +1,106 @@
+[
+  {
+    "name": "Parcel_Number",
+    "start": 0,
+    "length": 20,
+    "type": "str",
+    "trim": true,
+    "description": "Unique parcel identifier"
+  },
+  {
+    "name": "Owner_Name",
+    "start": 20,
+    "length": 40,
+    "type": "str",
+    "trim": true,
+    "description": "Property owner name"
+  },
+  {
+    "name": "Property_Address",
+    "start": 60,
+    "length": 35,
+    "type": "str",
+    "trim": true,
+    "description": "Property street address"
+  },
+  {
+    "name": "City",
+    "start": 95,
+    "length": 18,
+    "type": "str",
+    "trim": true,
+    "description": "City name"
+  },
+  {
+    "name": "State",
+    "start": 113,
+    "length": 2,
+    "type": "str",
+    "trim": true,
+    "description": "State abbreviation"
+  },
+  {
+    "name": "Zip_Code",
+    "start": 115,
+    "length": 10,
+    "type": "str",
+    "trim": true,
+    "description": "Zip or postal code"
+  },
+  {
+    "name": "Land_Use_Code",
+    "start": 125,
+    "length": 4,
+    "type": "str",
+    "trim": true,
+    "description": "Land use classification code"
+  },
+  {
+    "name": "Land_Use_Description",
+    "start": 129,
+    "length": 22,
+    "type": "str",
+    "trim": true,
+    "description": "Description of land use"
+  },
+  {
+    "name": "Total_Assessed_Value",
+    "start": 151,
+    "length": 12,
+    "type": "int",
+    "trim": true,
+    "description": "Total assessed property value"
+  },
+  {
+    "name": "Tax_Amount",
+    "start": 163,
+    "length": 14,
+    "type": "float",
+    "trim": true,
+    "description": "Annual tax amount"
+  },
+  {
+    "name": "Tax_Year",
+    "start": 177,
+    "length": 4,
+    "type": "int",
+    "trim": true,
+    "description": "Tax assessment year"
+  },
+  {
+    "name": "Delinquent_Flag",
+    "start": 181,
+    "length": 1,
+    "type": "str",
+    "trim": true,
+    "description": "Y/N flag for delinquent status"
+  },
+  {
+    "name": "Delinquent_Amount",
+    "start": 182,
+    "length": 13,
+    "type": "float",
+    "trim": true,
+    "description": "Amount of delinquent taxes if applicable"
+  }
+]

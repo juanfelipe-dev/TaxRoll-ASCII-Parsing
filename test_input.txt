@@ -1,0 +1,5 @@
+12345678901234567890John Smith              123 Main Street         Anytown        CA95123RES   Residential         1250000      12500.002024N      
+98765432109876543210Jane Doe               456 Oak Avenue          Bigcity        NY10001COM   Commercial          2500000      25000.002024N      
+11111111111111111111Bob Johnson            789 Pine Road           Smalltown      TX75001AGR   Agricultural       350000      3500.002024Y  15000.00
+22222222222222222222Alice Williams        101 Elm Street          Midtown        FL33101RES   Residential         1100000      11000.002024N      
+33333333333333333333Charlie Brown         202 Maple Drive         Largecity      WA98101IND   Industrial         5000000      50000.002024Y   8500.00

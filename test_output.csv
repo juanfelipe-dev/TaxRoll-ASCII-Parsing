@@ -1,0 +1,6 @@
+Parcel_Number,Owner_Name,Property_Address,City,State,Zip_Code,Land_Use_Code,Land_Use_Description,Total_Assessed_Value,Tax_Amount,Tax_Year,Delinquent_Flag,Delinquent_Amount
+12345678901234567890,John Smith              123 Main Street,Anytown        CA95123RES,Residential,,1250000,,12500.002024N,,,,,
+98765432109876543210,Jane Doe               456 Oak Avenue,Bigcity        NY10001COM,Commercial,,2500000,2,5000.002024N,,,,,
+11111111111111111111,Bob Johnson            789 Pine Road,Smalltown      TX75001AGR,Agricultural,3,50000,350,0.002024Y  15000.00,,,,,
+22222222222222222222,Alice Williams        101 Elm Street,Midtown        FL33101RES   R,esidential,1,100000,11,000.002024N,,,,,
+33333333333333333333,Charlie Brown         202 Maple Drive,Largecity      WA98101IND   I,ndustrial,50,00000,500,00.002024Y   8500.00,,,,,

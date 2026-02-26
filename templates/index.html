@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Roll Converter - Fixed Width to CSV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .card h3 {
+            color: #333;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-download {
+            background: #2196f3;
+            color: white;
+            padding: 8px 16px;
+            margin-top: 10px;
+        }
+
+        .btn-download:hover {
+            background: #0b7dda;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #666;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .schema-editor {
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .schema-field {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .schema-field input,
+        .schema-field select {
+            margin-bottom: 0;
+        }
+
+        .schema-field button {
+            padding: 8px 12px;
+            font-size: 0.9em;
+        }
+
+        .file-preview {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+
+        .file-preview-line {
+            padding: 5px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .file-preview-line:last-child {
+            border-bottom: none;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #f5c6cb;
+            display: block;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #bee5eb;
+            display: block;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            background: #f0f7ff;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .results-item {
+            margin-bottom: 15px;
+        }
+
+        .results-label {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .results-value {
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .position-guide {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .position-guide strong {
+            color: #856404;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .schema-field {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-badge.valid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.invalid {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Tax Roll Converter</h1>
+            <p>Convert fixed-width ASCII tax roll data to clean CSV format</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Left Column: File Upload & Conversion -->
+            <div class="card">
+                <h2>🔄 Convert File</h2>
+
+                <div id="message" class="message"></div>
+
+                <div class="form-group">
+                    <label for="inputFile">📁 Select Fixed-Width File</label>
+                    <input type="file" id="inputFile" accept=".txt,.dat,.asc,.csv">
+                    <small style="color: #666; display: block; margin-top: 8px;">
+                        Supported: .txt, .dat, .asc, .csv (Max 500MB)
+                    </small>
+                </div>
+
+                <div id="filePreviewSection" style="display: none;">
+                    <h3>📄 File Preview (First 10 Lines)</h3>
+                    <div id="filePreview" class="file-preview"></div>
+                    <button class="btn-secondary" onclick="showFileInfo()">Show File Info</button>
+                </div>
+
+                <div class="form-group">
+                    <h3>⚙️ Schema</h3>
+                    <div class="tabs">
+                        <button class="tab-button active" onclick="switchTab('schema-editor')">Editor</button>
+                        <button class="tab-button" onclick="switchTab('schema-paste')">Paste JSON</button>
+                        <button class="tab-button" onclick="switchTab('schema-layout')">From Layout</button>
+                    </div>
+
+                    <div id="schema-editor" class="tab-content active">
+                        <div id="schemaFields" class="schema-editor"></div>
+                        <button class="btn-secondary" onclick="addSchemaField()">+ Add Field</button>
+                        <button class="btn-secondary" onclick="loadSampleSchema('full_roll')">Load Full Roll Template</button>
+                        <button class="btn-secondary" onclick="loadSampleSchema('delinquent')">Load Delinquent Template</button>
+                    </div>
+
+                    <div id="schema-paste" class="tab-content">
+                        <label for="schemaPaste">Paste JSON Schema</label>
+                        <textarea id="schemaPaste" placeholder='[{"name": "Field1", "start": 0, "length": 20, "type": "str"}]'></textarea>
+                        <button class="btn-secondary" onclick="loadSchemaFromPaste()">Load from Paste</button>
+                    </div>
+
+                    <div id="schema-layout" class="tab-content">
+                        <div class="position-guide">
+                            <strong>📝 Layout Format:</strong> Paste your file specification here.
+                            <br>Expected format: "1-20 Parcel Number" or "Position 1-20: Parcel Number"
+                        </div>
+                        <label for="layoutText">Paste File Layout</label>
+                        <textarea id="layoutText" placeholder="1-20 Parcel Number&#10;21-60 Owner Name&#10;61-75 Property Address"></textarea>
+                        <button class="btn-secondary" onclick="extractSchemaFromLayout()">Extract Schema</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div id="validationStatus"></div>
+                </div>
+
+                <button class="btn-primary" onclick="convertFile()">🚀 Convert to CSV</button>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Converting your file...</p>
+                </div>
+
+                <div id="results" class="results">
+                    <div class="results-item">
+                        <div class="results-label">✓ Conversion Successful</div>
+                        <div class="results-value" id="recordCount">0 records converted</div>
+                    </div>
+                    <button class="btn-download" onclick="downloadConverted()">⬇️ Download CSV</button>
+                </div>
+            </div>
+
+            <!-- Right Column: Information & Help -->
+            <div class="card">
+                <h2>ℹ️ How to Use</h2>
+
+                <h3>1️⃣ Prepare Schema</h3>
+                <p style="color: #666; line-height: 1.6;">
+                    Define how fields map to your fixed-width file. Each field needs:
+                </p>
+                <ul style="color: #666; margin-left: 20px; line-height: 1.8;">
+                    <li><strong>Name</strong> - CSV column header</li>
+                    <li><strong>Start</strong> - Character position (0-based)</li>
+                    <li><strong>Length</strong> - Number of characters</li>
+                    <li><strong>Type</strong> - str, int, float, or date</li>
+                </ul>
+
+                <h3>2️⃣ Upload File</h3>
+                <p style="color: #666; line-height: 1.6;">
+                    Select your fixed-width ASCII file. Preview the first few lines to verify alignment.
+                </p>
+
+                <h3>3️⃣ Convert</h3>
+                <p style="color: #666; line-height: 1.6;">
+                    Click "Convert to CSV" and download the cleaned data.
+                </p>
+
+                <h3>📚 Quick Tips</h3>
+                <ul style="color: #666; margin-left: 20px; line-height: 1.8; font-size: 0.95em;">
+                    <li>Use <strong>Layout →</strong> tab to auto-extract from specifications</li>
+                    <li>Preview your file to verify field positions</li>
+                    <li>Save your schema for weekly automated updates</li>
+                    <li>Use sample templates for common tax roll formats</li>
+                </ul>
+
+                <h3>🔧 Field Types</h3>
+                <table style="width: 100%; margin-top: 10px; color: #666; font-size: 0.9em;">
+                    <tr style="border-bottom: 1px solid #e0e0e0;">
+                        <td style="padding: 8px;"><strong>str</strong></td>
+                        <td style="padding: 8px;">Text (default)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e0e0e0;">
+                        <td style="padding: 8px;"><strong>int</strong></td>
+                        <td style="padding: 8px;">Whole numbers</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e0e0e0;">
+                        <td style="padding: 8px;"><strong>float</strong></td>
+                        <td style="padding: 8px;">Decimal numbers</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px;"><strong>date</strong></td>
+                        <td style="padding: 8px;">Date values</td>
+                    </tr>
+                </table>
+
+                <h3>💡 Example</h3>
+                <p style="color: #666; font-size: 0.9em; font-family: 'Courier New', monospace; background: #f5f5f5; padding: 10px; border-radius: 5px; line-height: 1.4;">
+                    Parcel (pos 0-20) | Owner (pos 20-60) | Tax (pos 60-70)
+                </p>
+
+                <h3>❓ Need Help?</h3>
+                <p style="color: #666; line-height: 1.6; font-size: 0.95em;">
+                    Check the layout document from your data provider to find exact field positions. Position numbers might be 1-based in the docs but 0-based here.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden variables for dropdown -->
+    <select id="typeSelect" style="display: none;">
+        <option value="str">String</option>
+        <option value="int">Integer</option>
+        <option value="float">Float</option>
+        <option value="date">Date</option>
+    </select>
+
+    <script>
+        let currentSchema = [];
+        let currentOutputFile = '';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDefaultSchema();
+            setupFileUpload();
+        });
+
+        function setupFileUpload() {
+            const inputFile = document.getElementById('inputFile');
+            inputFile.addEventListener('change', function() {
+                previewFile(this.files[0]);
+                validateSchema();
+            });
+        }
+
+        function loadDefaultSchema() {
+            fetch('/api/schema/default')
+                .then(r => r.json())
+                .then(schema => {
+                    currentSchema = schema;
+                    renderSchema();
+                })
+                .catch(e => showMessage('Error loading default schema: ' + e, 'error'));
+        }
+
+        function loadSampleSchema(type) {
+            fetch(`/api/schema/sample/${type}`)
+                .then(r => r.json())
+                .then(schema => {
+                    currentSchema = schema;
+                    renderSchema();
+                    switchTab('schema-editor');
+                    showMessage(`Loaded ${type} template with ${schema.length} fields`, 'success');
+                })
+                .catch(e => showMessage('Error loading schema: ' + e, 'error'));
+        }
+
+        function renderSchema() {
+            const container = document.getElementById('schemaFields');
+            container.innerHTML = '';
+
+            currentSchema.forEach((field, index) => {
+                const fieldDiv = document.createElement('div');
+                fieldDiv.className = 'schema-field';
+                fieldDiv.id = `field-${index}`;
+
+                const typeSelect = document.createElement('select');
+                typeSelect.innerHTML = `
+                    <option value="str" ${field.type === 'str' ? 'selected' : ''}>String</option>
+                    <option value="int" ${field.type === 'int' ? 'selected' : ''}>Integer</option>
+                    <option value="float" ${field.type === 'float' ? 'selected' : ''}>Float</option>
+                    <option value="date" ${field.type === 'date' ? 'selected' : ''}>Date</option>
+                `;
+
+                fieldDiv.innerHTML = `
+                    <div>
+                        <label>Field Name</label>
+                        <input type="text" value="${field.name}" onchange="updateSchemaField(${index}, 'name', this.value)">
+                    </div>
+                    <div>
+                        <label>Start Position</label>
+                        <input type="text" value="${field.start}" onchange="updateSchemaField(${index}, 'start', parseInt(this.value))">
+                    </div>
+                    <div>
+                        <label>Length</label>
+                        <input type="text" value="${field.length}" onchange="updateSchemaField(${index}, 'length', parseInt(this.value))">
+                    </div>
+                    <div>
+                        <label>Type</label>
+                        <select onchange="updateSchemaField(${index}, 'type', this.value)"></select>
+                    </div>
+                    <button class="btn-secondary" onclick="removeSchemaField(${index})">✕</button>
+                `;
+
+                const typeSelectContainer = fieldDiv.querySelector('select');
+                typeSelectContainer.innerHTML = `
+                    <option value="str" ${field.type === 'str' ? 'selected' : ''}>String</option>
+                    <option value="int" ${field.type === 'int' ? 'selected' : ''}>Integer</option>
+                    <option value="float" ${field.type === 'float' ? 'selected' : ''}>Float</option>
+                    <option value="date" ${field.type === 'date' ? 'selected' : ''}>Date</option>
+                `;
+
+                container.appendChild(fieldDiv);
+            });
+
+            validateSchema();
+        }
+
+        function updateSchemaField(index, key, value) {
+            currentSchema[index][key] = value;
+            validateSchema();
+        }
+
+        function addSchemaField() {
+            currentSchema.push({
+                name: `NewField_${currentSchema.length + 1}`,
+                start: 0,
+                length: 20,
+                type: 'str',
+                trim: true
+            });
+            renderSchema();
+        }
+
+        function removeSchemaField(index) {
+            currentSchema.splice(index, 1);
+            renderSchema();
+        }
+
+        function loadSchemaFromPaste() {
+            try {
+                const json = document.getElementById('schemaPaste').value;
+                currentSchema = JSON.parse(json);
+                renderSchema();
+                switchTab('schema-editor');
+                showMessage('Schema loaded successfully', 'success');
+            } catch (e) {
+                showMessage('Invalid JSON: ' + e.message, 'error');
+            }
+        }
+
+        function extractSchemaFromLayout() {
+            const layoutText = document.getElementById('layoutText').value;
+
+            fetch('/api/extract_schema', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ layout_text: layoutText })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    currentSchema = data.schema;
+                    renderSchema();
+                    switchTab('schema-editor');
+                    showMessage('Schema extracted: ' + data.schema.length + ' fields', 'success');
+                } else {
+                    showMessage(data.error || 'Failed to extract schema', 'error');
+                }
+            })
+            .catch(e => showMessage('Error: ' + e, 'error'));
+        }
+
+        function validateSchema() {
+            fetch('/api/validate_schema', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ schema: JSON.stringify(currentSchema) })
+            })
+            .then(r => r.json())
+            .then(data => {
+                const status = document.getElementById('validationStatus');
+                if (data.valid) {
+                    status.innerHTML = `<div class="status-badge valid">✓ Schema Valid (${data.field_count} fields)</div>`;
+                } else {
+                    status.innerHTML = `<div class="status-badge invalid">✕ Invalid: ${data.error}</div>`;
+                }
+            })
+            .catch(e => console.log('Validation error:', e));
+        }
+
+        function previewFile(file) {
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/api/preview', {
+                method: 'POST',
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    const previewDiv = document.getElementById('filePreview');
+                    previewDiv.innerHTML = data.lines.map(line => 
+                        `<div class="file-preview-line">${line}</div>`
+                    ).join('');
+                    document.getElementById('filePreviewSection').style.display = 'block';
+                    showMessage(`File preview: ${data.line_count} lines (${data.line_length} chars/line)`, 'info');
+                }
+            })
+            .catch(e => showMessage('Preview error: ' + e, 'error'));
+        }
+
+        function showFileInfo() {
+            alert('Line length: Shows the total width of your fixed-width file.\nMatch this to the sum of your schema field lengths.');
+        }
+
+        function convertFile() {
+            const file = document.getElementById('inputFile').files[0];
+            if (!file) {
+                showMessage('Please select a file', 'error');
+                return;
+            }
+
+            if (currentSchema.length === 0) {
+                showMessage('Please define at least one field in the schema', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('schema', JSON.stringify(currentSchema));
+
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').classList.remove('active');
+
+            fetch('/api/convert', {
+                method: 'POST',
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                if (data.success) {
+                    currentOutputFile = data.output_file;
+                    document.getElementById('recordCount').textContent = data.record_count + ' records converted';
+                    document.getElementById('results').classList.add('active');
+                    showMessage(data.message, 'success');
+                } else {
+                    showMessage('Conversion error: ' + (data.error || 'Unknown error'), 'error');
+                }
+            })
+            .catch(e => {
+                document.getElementById('loading').style.display = 'none';
+                showMessage('Error: ' + e, 'error');
+            });
+        }
+
+        function downloadConverted() {
+            if (!currentOutputFile) {
+                showMessage('No file to download', 'error');
+                return;
+            }
+            window.location.href = `/api/download/${currentOutputFile}`;
+        }
+
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showMessage(msg, type) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = msg;
+            msgDiv.className = 'message ' + type;
+            
+            if (type !== 'error') {
+                setTimeout(() => {
+                    msgDiv.className = 'message';
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>
